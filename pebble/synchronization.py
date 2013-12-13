@@ -14,18 +14,39 @@
 # along with Pebble.  If not, see <http://www.gnu.org/licenses/>.
 
 
-def synchronized(lock):
-    """ Synchronization decorator. Locks the execution on given 'lock'
+class HighlanderKilledException(Exception):
+    message = 'This has not the only thread/process alive, so got killed.'
+
+
+def synchronized(lock, highlander=False):
+    """ Synchronization decorator.
+
+    Locks the execution on given 'lock', or kill the execution if 'highlander'
+    is True and the 'lock' is held by someone else.
 
     Works with both threading and multiprocessing Lock s
     """
 
-    def wrap(f):
-        def new_function(*args, **kw):
-            lock.acquire()
-            try:
-                return f(*args, **kw)
-            finally:
-                lock.release()
-        return new_function
+    if highlander:
+        def wrap(f):
+            def new_function(*args, **kw):
+                can_run = lock.acquire(False)
+                if can_run:
+                    try:
+                        return f(*args, **kw)
+                    finally:
+                        lock.release()
+                else:
+                    raise IsNotTheOneException()
+            return new_function
+    else:
+        def wrap(f):
+            def new_function(*args, **kw):
+                lock.acquire()
+                try:
+                    return f(*args, **kw)
+                finally:
+                    lock.release()
+            return new_function
+
     return wrap

@@ -4,9 +4,10 @@ __all__ = ['thread',
            'PebbleError',
            'SerializingError',
            'TimeoutError',
-           'TaskCancelled']
+           'TaskCancelled',
+           'HighlanderKilledException']
 
 from .pebble import PebbleError, TimeoutError
 from .process import process, SerializingError, TaskCancelled
 from .thread import thread
-from .synchronization import synchronized
+from .synchronization import synchronized, HighlanderKilledException
