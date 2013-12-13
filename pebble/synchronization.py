@@ -14,8 +14,7 @@
 # along with Pebble.  If not, see <http://www.gnu.org/licenses/>.
 
 
-class HighlanderKilledException(Exception):
-    message = 'This has not the only thread/process alive, so got killed.'
+from .pebble import HighlanderKilledException
 
 
 def synchronized(lock, highlander=False):

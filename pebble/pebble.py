@@ -41,3 +41,15 @@ class TaskCancelled(PebbleError):
 
     def __str__(self):
         return str(self.msg)
+
+
+class HighlanderKilledException(PebbleError):
+    """Raised if a synchronized-highlander task get called with another running"""
+    def __init__(self, msg='This has not the only thread/process alive, so got killed.'):
+        self.msg = msg
+
+    def __repr__(self):
+        return "%s %s" % (self.__class__, self.msg)
+
+    def __str__(self):
+        return str(self.msg)
